@@ -37,7 +37,7 @@
     html {
       overflow-y: scroll;
       scrollbar-gutter: stable;
-      scrollbar-width: none; /* Hide default ugly browser bars */
+      scrollbar-width: none;
     }
 
     html::-webkit-scrollbar {
@@ -93,7 +93,6 @@
       opacity: 0.9;
     }
 
-    /* Top Navigation Header */
     .top-header {
       position: relative;
       z-index: 10;
@@ -211,7 +210,6 @@
       50% { opacity: 1; transform: scale(1.2); }
     }
 
-    /* Main Viewport */
     .client-viewport {
       position: relative;
       z-index: 10;
@@ -226,7 +224,6 @@
       margin: 0 auto;
     }
 
-    /* Menu Navigation */
     .menu-column {
       display: flex;
       flex-direction: column;
@@ -301,7 +298,6 @@
       box-shadow: 0 4px 14px var(--primary-glow);
     }
 
-    /* Content Stage: Increased max-width & comfort height */
     .content-stage {
       flex: 1;
       max-width: 700px;
@@ -310,7 +306,6 @@
       border-radius: 1.8rem;
     }
 
-    /* Stage Cards: Hidden scrollbars with natural touch-scroll */
     .stage-card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -328,17 +323,16 @@
       width: 100%;
       max-height: 560px;
       overflow-y: auto;
-      scrollbar-width: none; /* Hide default scrollbar completely */
+      scrollbar-width: none;
       opacity: 0;
       will-change: transform, opacity;
       transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
     }
 
     .stage-card::-webkit-scrollbar {
-      display: none; /* Clean edge */
+      display: none;
     }
 
-    /* Welcome tab comfortably pushed down */
     #view-welcome {
       margin-top: 24px;
       padding-top: 2.4rem;
@@ -390,7 +384,6 @@
       line-height: 1.65;
     }
 
-    /* Exact Connected Solid White/Mint Logo Vector */
     .welcome-logo-banner {
       display: flex;
       justify-content: center;
@@ -404,7 +397,6 @@
       filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.3));
     }
 
-    /* Filters */
     .toggle-bar {
       display: flex;
       gap: 0.5rem;
@@ -435,14 +427,11 @@
       box-shadow: 0 2px 10px var(--primary-glow);
     }
 
-    /* ========================================================
-       GOOGLE PIXEL WATCH DYNAMIC FISHEYE SCROLL ENGINE
-       ======================================================== */
     .pixel-scroll-stack {
       display: flex;
       flex-direction: column;
       gap: 0.85rem;
-      padding: 1.5rem 0; /* Padding allows top and bottom items to hit dead center */
+      padding: 1.5rem 0;
     }
 
     .pixel-item {
@@ -558,7 +547,6 @@
       max-width: 320px;
     }
 
-    /* Minimalist Emerald Rubber Duck */
     .duck-toy {
       position: fixed;
       bottom: 2.5rem;
@@ -680,7 +668,6 @@
   <header class="top-header">
     <a href="https://caviarstudios.straw.page/" target="_blank" rel="noopener" class="brand-cluster" title="Wanna Go Back Time?">
       <div class="caviar-logo-icon">
-        <!-- Exact 7-Circle Solid Filled 'C' Icon -->
         <svg viewBox="0 0 100 100">
           <g fill="#34d399">
             <circle cx="50" cy="18" r="11" />
@@ -721,17 +708,15 @@
 
     <div class="content-stage" id="stage-container">
       
-      <!-- 1. WELCOME TAB (Shifted lower + Exact Solid Logo Emblem) -->
+      <!-- 1. WELCOME TAB -->
       <div class="stage-card card-active" id="view-welcome">
         <div>
           <div class="section-headline">Studio Dossier</div>
           <div class="stage-title">About Caviar Studios</div>
         </div>
 
-        <!-- The Exact Solid Logo with Clean Outline Typography -->
         <div class="welcome-logo-banner">
           <svg class="welcome-logo-svg" viewBox="0 0 200 240">
-            <!-- 7 Filled Solid Circles in Exact Orientation -->
             <g fill="#f0fdf4">
               <circle cx="100" cy="38" r="19" />
               <circle cx="58" cy="54" r="19" />
@@ -741,7 +726,6 @@
               <circle cx="138" cy="134" r="19" />
               <circle cx="146" cy="90" r="19" />
             </g>
-            <!-- Bold Typography -->
             <text x="100" y="196" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="800" letter-spacing="4" fill="none" stroke="#f0fdf4" stroke-width="1.4">CAVIAR</text>
             <text x="100" y="224" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="21" font-weight="800" letter-spacing="4" fill="none" stroke="#f0fdf4" stroke-width="1.4">STUDIOS</text>
           </svg>
@@ -795,7 +779,7 @@
         </div>
       </div>
 
-      <!-- 3. GAMES TAB (With Pixel Watch Dynamic Fisheye Scroll) -->
+      <!-- 3. GAMES TAB -->
       <div class="stage-card" id="view-games">
         <div>
           <div class="section-headline">Game Deployments</div>
@@ -955,7 +939,7 @@
 
     let mouseX = -1000, mouseY = -1000;
     const trail = [];
-    const maxTrail = isMobile ? 12 : 18;
+    const maxTrail = 18;
 
     function pushPointer(x, y) {
       mouseX = x;
@@ -964,12 +948,10 @@
       if (trail.length > maxTrail) trail.shift();
     }
 
-    window.addEventListener('mousemove', (e) => pushPointer(e.clientX, e.clientY));
-    window.addEventListener('touchmove', (e) => {
-      if (e.touches && e.touches[0]) {
-        pushPointer(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    }, { passive: true });
+    // Enable cursor trail ONLY on non-mobile devices (disabled for touch)
+    if (!isMobile) {
+      window.addEventListener('mousemove', (e) => pushPointer(e.clientX, e.clientY));
+    }
 
     function renderLoop() {
       ctx.clearRect(0, 0, width, height);
@@ -1001,7 +983,7 @@
         });
       }
 
-      if (trail.length > 2) {
+      if (!isMobile && trail.length > 2) {
         ctx.save();
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
@@ -1012,7 +994,7 @@
 
         for (let i = 0; i < trail.length - 1; i++) {
           const ratio = (i + 1) / trail.length;
-          ctx.lineWidth = ratio * (isMobile ? 2.5 : 3.8);
+          ctx.lineWidth = ratio * 3.8;
           ctx.beginPath();
           ctx.moveTo(trail[i].x, trail[i].y);
           ctx.lineTo(trail[i + 1].x, trail[i + 1].y);
@@ -1025,7 +1007,7 @@
 
         for (let i = 0; i < trail.length - 1; i++) {
           const ratio = (i + 1) / trail.length;
-          ctx.lineWidth = ratio * (isMobile ? 1.2 : 1.5);
+          ctx.lineWidth = ratio * 1.5;
           ctx.beginPath();
           ctx.moveTo(trail[i].x, trail[i].y);
           ctx.lineTo(trail[i + 1].x, trail[i + 1].y);
@@ -1040,7 +1022,7 @@
     }
     renderLoop();
 
-    // 2. Parallax Shift on Glowing Oval
+    // 2. Parallax Shift on Glowing Oval (Desktop only)
     const glowOval = document.getElementById('glow-oval');
     if (!isMobile) {
       window.addEventListener('mousemove', (e) => {
@@ -1149,7 +1131,6 @@
           nextCard.classList.add('card-active');
           nextCard.classList.remove('enter-from-bottom', 'enter-from-top');
 
-          // Trigger Pixel-Watch Fisheye update on entry
           updatePixelFisheye(nextCard);
 
           setTimeout(() => {
@@ -1176,22 +1157,19 @@
         const dist = Math.abs(centerY - itemCenterY);
         const maxDist = parentRect.height / 1.6;
 
-        // Dynamic scale and opacity mapping (Peak at center)
         let factor = 1 - Math.min(dist / maxDist, 1);
-        let scale = 0.90 + (factor * 0.14); // 0.90 at edges -> 1.04 at dead center
-        let opacity = 0.45 + (factor * 0.55); // 0.45 -> 1.0
+        let scale = 0.90 + (factor * 0.14);
+        let opacity = 0.45 + (factor * 0.55);
 
         item.style.transform = `scale(${scale})`;
         item.style.opacity = opacity;
       });
     }
 
-    // Attach scroll listeners to all scrollable stage cards
     document.querySelectorAll('.stage-card').forEach(card => {
       card.addEventListener('scroll', () => updatePixelFisheye(card), { passive: true });
     });
 
-    // Initial pass on load
     setTimeout(() => {
       const activeCard = document.querySelector('.stage-card.card-active');
       if (activeCard) updatePixelFisheye(activeCard);
