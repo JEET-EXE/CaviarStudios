@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Caviar Studios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050d0a;
+      --bg-gradient: radial-gradient(circle at 75% 35%, #0a2118 0%, #06120e 55%, #030806 100%);
+      --surface: rgba(11, 24, 18, 0.88);
+      --surface-hover: rgba(16, 36, 27, 0.95);
+      --surface-sub: rgba(7, 17, 13, 0.82);
+      --border: rgba(52, 211, 153, 0.16);
+      --border-accent: rgba(52, 211, 153, 0.45);
+      --primary: #10b981;
+      --primary-hover: #34d399;
+      --primary-glow: rgba(16, 185, 129, 0.45);
+      --text: #f0fdf4;
+      --text-muted: #7fa18f;
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      overflow-y: scroll;
+      scrollbar-gutter: stable;
+      scrollbar-width: none; /* Hide default ugly browser bars */
+    }
+
+    html::-webkit-scrollbar {
+      display: none;
+    }
+
+    body {
+      background: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      perspective: 1200px;
+    }
+
+    #ambient-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 99999;
+    }
+
+    .oval-glow-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .glowing-oval {
+      position: absolute;
+      top: 20%;
+      right: 12%;
+      width: 500px;
+      height: 560px;
+      border-radius: 50% / 60%;
+      background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.24) 0%, rgba(6, 78, 59, 0.38) 45%, transparent 70%);
+      filter: blur(45px);
+      box-shadow: 0 0 100px rgba(16, 185, 129, 0.15);
+      will-change: transform;
+      transform: rotate(-18deg);
+      opacity: 0.9;
+    }
+
+    /* Top Navigation Header */
+    .top-header {
+      position: relative;
+      z-index: 10;
+      padding: 1.8rem 3.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .caviar-logo-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(11, 24, 18, 0.7);
+      border: 1px solid var(--border-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease;
+    }
+
+    .brand-cluster:hover .caviar-logo-icon {
+      transform: rotate(12deg) scale(1.06);
+      border-color: var(--primary-hover);
+    }
+
+    .caviar-logo-icon svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .brand-text-title {
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .logo-speech-bubble {
+      position: absolute;
+      top: 54px;
+      left: 0;
+      background: rgba(11, 24, 18, 0.95);
+      border: 1px solid var(--border-accent);
+      color: var(--primary-hover);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.6rem;
+      pointer-events: none;
+      white-space: nowrap;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 10px rgba(16, 185, 129, 0.2);
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
+    }
+
+    .logo-speech-bubble::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: 16px;
+      width: 8px;
+      height: 8px;
+      background: rgba(11, 24, 18, 0.95);
+      border-left: 1px solid var(--border-accent);
+      border-top: 1px solid var(--border-accent);
+      transform: rotate(45deg);
+    }
+
+    .brand-cluster:hover .logo-speech-bubble {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .status-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: rgba(11, 24, 18, 0.7);
+      border: 1px solid var(--border);
+      padding: 0.45rem 1rem;
+      border-radius: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 0.5; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Main Viewport */
+    .client-viewport {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem 3rem 4rem;
+      gap: 4rem;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Menu Navigation */
+    .menu-column {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      min-width: 270px;
+      position: relative;
+    }
+
+    .nav-pill-indicator {
+      position: absolute;
+      left: -28px;
+      width: 18px;
+      height: 6px;
+      background: #10b981;
+      border-radius: 3px;
+      box-shadow: 0 0 14px 2px rgba(16, 185, 129, 0.95);
+      pointer-events: none;
+      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 5;
+    }
+
+    .menu-item {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-main);
+      font-size: 2.1rem;
+      font-weight: 800;
+      text-align: left;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 0.35rem 0;
+      transition: color 0.15s, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .menu-item:hover {
+      color: var(--text);
+      transform: translateX(6px);
+    }
+
+    .menu-item.active {
+      color: var(--text);
+    }
+
+    .sub-menu-pills {
+      margin-top: 1.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .sub-pill {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 0.55rem;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .sub-pill:hover {
+      border-color: var(--border-accent);
+      color: var(--text);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    /* Content Stage: Increased max-width & comfort height */
+    .content-stage {
+      flex: 1;
+      max-width: 700px;
+      position: relative;
+      min-height: 560px;
+      border-radius: 1.8rem;
+    }
+
+    /* Stage Cards: Hidden scrollbars with natural touch-scroll */
+    .stage-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.8rem;
+      padding: 2.4rem;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.65);
+      display: none;
+      flex-direction: column;
+      gap: 1.4rem;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      max-height: 560px;
+      overflow-y: auto;
+      scrollbar-width: none; /* Hide default scrollbar completely */
+      opacity: 0;
+      will-change: transform, opacity;
+      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+    }
+
+    .stage-card::-webkit-scrollbar {
+      display: none; /* Clean edge */
+    }
+
+    /* Welcome tab comfortably pushed down */
+    #view-welcome {
+      margin-top: 24px;
+      padding-top: 2.4rem;
+    }
+
+    .stage-card.enter-from-bottom {
+      transform: translate3d(0, 35px, 0);
+    }
+    .stage-card.enter-from-top {
+      transform: translate3d(0, -35px, 0);
+    }
+    .stage-card.exit-to-top {
+      transform: translate3d(0, -35px, 0) !important;
+      opacity: 0 !important;
+    }
+    .stage-card.exit-to-bottom {
+      transform: translate3d(0, 35px, 0) !important;
+      opacity: 0 !important;
+    }
+
+    .stage-card.card-active {
+      display: flex;
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    .stage-card:hover {
+      border-color: var(--border-accent);
+    }
+
+    .section-headline {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      color: var(--primary-hover);
+      text-transform: uppercase;
+    }
+
+    .stage-title {
+      font-size: 1.95rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-top: 0.2rem;
+    }
+
+    .stage-desc {
+      color: var(--text-muted);
+      font-size: 0.94rem;
+      line-height: 1.65;
+    }
+
+    /* Exact Connected Solid White/Mint Logo Vector */
+    .welcome-logo-banner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0.8rem 0 1.2rem;
+    }
+
+    .welcome-logo-svg {
+      width: 145px;
+      height: auto;
+      filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.3));
+    }
+
+    /* Filters */
+    .toggle-bar {
+      display: flex;
+      gap: 0.5rem;
+      background: var(--surface-sub);
+      padding: 0.35rem;
+      border-radius: 0.75rem;
+      border: 1px solid var(--border);
+      width: fit-content;
+    }
+
+    .toggle-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.4rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .toggle-btn.active {
+      background: var(--primary);
+      color: #040806;
+      font-weight: 700;
+      box-shadow: 0 2px 10px var(--primary-glow);
+    }
+
+    /* ========================================================
+       GOOGLE PIXEL WATCH DYNAMIC FISHEYE SCROLL ENGINE
+       ======================================================== */
+    .pixel-scroll-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      padding: 1.5rem 0; /* Padding allows top and bottom items to hit dead center */
+    }
+
+    .pixel-item {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s ease;
+      will-change: transform, opacity;
+      transform-origin: center center;
+    }
+
+    .release-card {
+      background: var(--surface-sub);
+      border: 1px solid var(--border);
+      border-radius: 1.15rem;
+      padding: 1.15rem 1.45rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .release-card:hover {
+      background: var(--surface-hover);
+      border-color: var(--border-accent);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .release-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .release-icon {
+      font-size: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(7, 16, 13, 0.8);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .release-name {
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .release-category {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .btn-launch {
+      background: var(--primary);
+      color: #040806;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.55rem 1.25rem;
+      border-radius: 0.6rem;
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      z-index: 50;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+
+    .btn-launch:hover {
+      background: var(--primary-hover);
+      box-shadow: 0 6px 20px rgba(52, 211, 153, 0.5);
+      transform: scale(1.04);
+    }
+
+    .coming-soon-box {
+      background: rgba(9, 20, 15, 0.5);
+      border: 1px dashed rgba(52, 211, 153, 0.25);
+      border-radius: 1.15rem;
+      padding: 2.8rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 0.8rem;
+    }
+
+    .cs-icon {
+      font-size: 2rem;
+      opacity: 0.8;
+      animation: gentleBounce 2s infinite ease-in-out;
+    }
+
+    @keyframes gentleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .cs-title {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: var(--primary-hover);
+    }
+
+    .cs-desc {
+      font-family: var(--font-main);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      max-width: 320px;
+    }
+
+    /* Minimalist Emerald Rubber Duck */
+    .duck-toy {
+      position: fixed;
+      bottom: 2.5rem;
+      right: 2.5rem;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transform-origin: bottom center;
+    }
+
+    .duck-svg-wrapper {
+      width: 62px;
+      height: 62px;
+      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 10px var(--primary-glow));
+      transform-origin: bottom center;
+      transition: transform 0.08s ease-out;
+    }
+
+    .duck-toy:hover .duck-svg-wrapper {
+      transform: scale(1.1) rotate(4deg);
+    }
+
+    .duck-squash {
+      transform: scale(1.4, 0.52) !important;
+    }
+
+    .duck-badge {
+      background: rgba(11, 24, 18, 0.9);
+      border: 1px solid var(--border-accent);
+      color: var(--primary-hover);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.65rem;
+      border-radius: 1rem;
+      margin-bottom: 0.4rem;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    }
+
+    .duck-pop-note {
+      position: fixed;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--primary-hover);
+      pointer-events: none;
+      animation: gentleFloat 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      z-index: 100000;
+    }
+
+    @keyframes gentleFloat {
+      0% { opacity: 1; transform: translate(0, 0); }
+      100% { opacity: 0; transform: translate(var(--mx, 0px), -36px); }
+    }
+
+    @media (max-width: 768px) {
+      .top-header {
+        padding: 1.2rem 1.4rem;
+      }
+      .brand-text-title {
+        font-size: 1.1rem;
+      }
+      .status-badge {
+        display: none;
+      }
+      .client-viewport {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0.5rem 1rem 7.5rem;
+        gap: 1.5rem;
+      }
+      .menu-column {
+        min-width: 100%;
+        padding-left: 1.8rem;
+        gap: 0.35rem;
+      }
+      .menu-item {
+        font-size: 1.6rem;
+      }
+      .nav-pill-indicator {
+        left: 0;
+      }
+      .sub-menu-pills {
+        margin-top: 1rem;
+      }
+      .content-stage {
+        max-width: 100%;
+        min-height: 560px;
+      }
+      .stage-card {
+        padding: 1.6rem 1.25rem;
+        border-radius: 1.4rem;
+        max-height: 560px;
+      }
+      #view-welcome {
+        margin-top: 12px;
+        padding-top: 1.8rem;
+      }
+      .stage-title {
+        font-size: 1.5rem;
+      }
+      .duck-toy {
+        bottom: 1.2rem;
+        right: 1.2rem;
+        transform: scale(0.85);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="ambient-canvas"></canvas>
+
+  <div class="oval-glow-container">
+    <div class="glowing-oval" id="glow-oval"></div>
+  </div>
+
+  <header class="top-header">
+    <a href="https://caviarstudios.straw.page/" target="_blank" rel="noopener" class="brand-cluster" title="Wanna Go Back Time?">
+      <div class="caviar-logo-icon">
+        <!-- Exact 7-Circle Solid Filled 'C' Icon -->
+        <svg viewBox="0 0 100 100">
+          <g fill="#34d399">
+            <circle cx="50" cy="18" r="11" />
+            <circle cx="26" cy="28" r="11" />
+            <circle cx="15" cy="50" r="11" />
+            <circle cx="26" cy="72" r="11" />
+            <circle cx="50" cy="82" r="11" />
+            <circle cx="74" cy="72" r="11" />
+            <circle cx="78" cy="46" r="11" />
+          </g>
+        </svg>
+      </div>
+      <div class="brand-text-title">Caviar Studios</div>
+      <div class="logo-speech-bubble">Wanna Go Back Time?</div>
+    </a>
+
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <span>SOLO STUDIO PROTOCOL</span>
+    </div>
+  </header>
+
+  <main class="client-viewport">
+    
+    <nav class="menu-column" id="nav-column">
+      <div class="nav-pill-indicator" id="nav-indicator"></div>
+      <button class="menu-item active" data-index="0" data-tab="welcome">1. Welcome</button>
+      <button class="menu-item" data-index="1" data-tab="apps">2. Apps</button>
+      <button class="menu-item" data-index="2" data-tab="games">3. Games</button>
+      <button class="menu-item" data-index="3" data-tab="webapps">4. Web Apps</button>
+
+      <div class="sub-menu-pills">
+        <a href="https://jeetexe.itch.io/" target="_blank" rel="noopener" class="sub-pill">itch.io</a>
+        <a href="https://milinks.straw.page/" target="_blank" rel="noopener" class="sub-pill">milinks</a>
+        <a href="https://instrumentalings.straw.page/" target="_blank" rel="noopener" class="sub-pill">instrumentalings</a>
+      </div>
+    </nav>
+
+    <div class="content-stage" id="stage-container">
+      
+      <!-- 1. WELCOME TAB (Shifted lower + Exact Solid Logo Emblem) -->
+      <div class="stage-card card-active" id="view-welcome">
+        <div>
+          <div class="section-headline">Studio Dossier</div>
+          <div class="stage-title">About Caviar Studios</div>
+        </div>
+
+        <!-- The Exact Solid Logo with Clean Outline Typography -->
+        <div class="welcome-logo-banner">
+          <svg class="welcome-logo-svg" viewBox="0 0 200 240">
+            <!-- 7 Filled Solid Circles in Exact Orientation -->
+            <g fill="#f0fdf4">
+              <circle cx="100" cy="38" r="19" />
+              <circle cx="58" cy="54" r="19" />
+              <circle cx="38" cy="94" r="19" />
+              <circle cx="56" cy="134" r="19" />
+              <circle cx="98" cy="150" r="19" />
+              <circle cx="138" cy="134" r="19" />
+              <circle cx="146" cy="90" r="19" />
+            </g>
+            <!-- Bold Typography -->
+            <text x="100" y="196" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="22" font-weight="800" letter-spacing="4" fill="none" stroke="#f0fdf4" stroke-width="1.4">CAVIAR</text>
+            <text x="100" y="224" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="21" font-weight="800" letter-spacing="4" fill="none" stroke="#f0fdf4" stroke-width="1.4">STUDIOS</text>
+          </svg>
+        </div>
+
+        <div class="stage-desc">
+          Welcome to Caviar Studios. Built as a solo-developer powerhouse driven by curiosity and an uncompromising commitment to crafting high-quality digital experiences.
+        </div>
+        <div class="stage-desc" style="background: var(--surface-sub); border: 1px solid var(--border); padding: 1.2rem; border-radius: 1rem;">
+          <strong style="color: var(--text);">Core Specialization:</strong><br>
+          I specialize exclusively in <strong>Windows and Android software architecture</strong> — engineering native desktop binaries and lean mobile utilities with zero fluff.
+        </div>
+        <div class="stage-desc">
+          <strong>Mission:</strong> Premium software and engaging games should be free and accessible to everyone without locked paywalls or corporate subscription traps.
+        </div>
+      </div>
+
+      <!-- 2. APPS TAB -->
+      <div class="stage-card" id="view-apps">
+        <div>
+          <div class="section-headline">Software Portfolio</div>
+          <div class="stage-title">Application Suite</div>
+        </div>
+
+        <div class="toggle-bar">
+          <button class="toggle-btn active" id="btn-show-android-apps">Android Apps</button>
+          <button class="toggle-btn" id="btn-show-windows-apps">Windows Apps</button>
+        </div>
+
+        <div class="pixel-scroll-stack" id="stack-android-apps">
+          <div class="pixel-item">
+            <div class="release-card">
+              <div class="release-left">
+                <div class="release-icon">📓</div>
+                <div>
+                  <div class="release-name">NOTEBOOK</div>
+                  <div class="release-category">Android Mobile Application</div>
+                </div>
+              </div>
+              <a href="https://notebookapp.straw.page/" target="_blank" rel="noopener" class="btn-launch">Get APK</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="pixel-scroll-stack" id="stack-windows-apps" style="display: none;">
+          <div class="coming-soon-box">
+            <div class="cs-icon">💻</div>
+            <div class="cs-title">COMING SOON</div>
+            <div class="cs-desc">Windows desktop utilities are actively being built. Clean native binaries will deploy here.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. GAMES TAB (With Pixel Watch Dynamic Fisheye Scroll) -->
+      <div class="stage-card" id="view-games">
+        <div>
+          <div class="section-headline">Game Deployments</div>
+          <div class="stage-title">Indie Game Roster</div>
+        </div>
+
+        <div class="toggle-bar">
+          <button class="toggle-btn active" id="btn-show-windows-games">Windows Games</button>
+          <button class="toggle-btn" id="btn-show-android-games">Android Games</button>
+        </div>
+
+        <div class="pixel-scroll-stack" id="stack-windows-games">
+          <div class="pixel-item">
+            <div class="release-card">
+              <div class="release-left">
+                <div class="release-icon">⌨️</div>
+                <div>
+                  <div class="release-name">WordDefender</div>
+                  <div class="release-category">Windows Typing Arcade</div>
+                </div>
+              </div>
+              <a href="https://jeetexe.itch.io/worddefender" target="_blank" rel="noopener" class="btn-launch">Launch</a>
+            </div>
+          </div>
+
+          <div class="pixel-item">
+            <div class="release-card">
+              <div class="release-left">
+                <div class="release-icon">💣</div>
+                <div>
+                  <div class="release-name">BomBDefuser</div>
+                  <div class="release-category">Windows Tactical Puzzle</div>
+                </div>
+              </div>
+              <a href="https://jeetexe.itch.io/bombdefuser" target="_blank" rel="noopener" class="btn-launch">Launch</a>
+            </div>
+          </div>
+
+          <div class="pixel-item">
+            <div class="release-card">
+              <div class="release-left">
+                <div class="release-icon">🥊</div>
+                <div>
+                  <div class="release-name">BLOODSHED</div>
+                  <div class="release-category">Windows Combat Action</div>
+                </div>
+              </div>
+              <a href="https://jeetexe.itch.io/bloodshed" target="_blank" rel="noopener" class="btn-launch">Launch</a>
+            </div>
+          </div>
+
+          <div class="pixel-item">
+            <div class="release-card">
+              <div class="release-left">
+                <div class="release-icon">🖱️</div>
+                <div>
+                  <div class="release-name">ClickerXtreme</div>
+                  <div class="release-category">Windows Endurance Clicker</div>
+                </div>
+              </div>
+              <a href="https://jeetexe.itch.io/clikerxtreme" target="_blank" rel="noopener" class="btn-launch">Launch</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="pixel-scroll-stack" id="stack-android-games" style="display: none;">
+          <div class="coming-soon-box">
+            <div class="cs-icon">📱</div>
+            <div class="cs-title">COMING SOON</div>
+            <div class="cs-desc">Touch-engineered Android games are in the oven. Stand by for mobile releases.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. WEB APPS TAB -->
+      <div class="stage-card" id="view-webapps">
+        <div>
+          <div class="section-headline">Browser Experiments</div>
+          <div class="stage-title">Web Applications</div>
+        </div>
+        <div class="stage-desc">
+          Browser-native applications and real-time networking prototypes.
+        </div>
+
+        <div class="pixel-scroll-stack">
+          <div class="pixel-item">
+            <div class="release-card">
+              <div class="release-left">
+                <div class="release-icon">💬</div>
+                <div>
+                  <div class="release-name">YAPP</div>
+                  <div class="release-category">Real-Time Chatting Platform</div>
+                </div>
+              </div>
+              <a href="https://jeet-exe.github.io/YAPP/" target="_blank" rel="noopener" class="btn-launch">Launch</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Minimalist Emerald Rubber Duck -->
+  <div class="duck-toy" id="duck-toy" title="Squeeze">
+    <div class="duck-badge" id="duck-counter">0 squeaks</div>
+    <div class="duck-svg-wrapper" id="duck-sprite">
+      <svg viewBox="0 0 100 100" width="100%" height="100%">
+        <defs>
+          <radialGradient id="emeraldDuckBody" cx="38%" cy="32%" r="68%">
+            <stop offset="0%" stop-color="#6ee7b7"/>
+            <stop offset="55%" stop-color="#10b981"/>
+            <stop offset="100%" stop-color="#044e3b"/>
+          </radialGradient>
+          <radialGradient id="emeraldDuckBeak" cx="30%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#a7f3d0"/>
+            <stop offset="100%" stop-color="#059669"/>
+          </radialGradient>
+        </defs>
+        <path d="M 22,64 C 8,56 12,40 24,42 C 32,44 42,48 58,48 C 76,48 88,58 84,72 C 80,82 62,88 44,86 C 26,84 18,74 22,64 Z" fill="url(#emeraldDuckBody)"/>
+        <path d="M 38,56 C 48,54 58,60 54,68 C 50,74 38,76 32,68 C 30,64 32,58 38,56 Z" fill="#065f46" opacity="0.6"/>
+        <circle cx="64" cy="34" r="18" fill="url(#emeraldDuckBody)"/>
+        <path d="M 78,34 C 88,32 94,38 88,43 C 82,45 76,41 78,34 Z" fill="url(#emeraldDuckBeak)"/>
+        <circle cx="68" cy="29" r="3" fill="#022c22"/>
+        <circle cx="69" cy="28" r="1" fill="#ecfdf5"/>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    // 1. Pointer & Trail Engine
+    const canvas = document.getElementById('ambient-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window);
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particleCount = isMobile ? 0 : 36;
+    const particles = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.7,
+        vy: (Math.random() - 0.5) * 0.7,
+        size: Math.random() * 2 + 1.2,
+        alpha: Math.random() * 0.35 + 0.15
+      });
+    }
+
+    let mouseX = -1000, mouseY = -1000;
+    const trail = [];
+    const maxTrail = isMobile ? 12 : 18;
+
+    function pushPointer(x, y) {
+      mouseX = x;
+      mouseY = y;
+      trail.push({ x, y });
+      if (trail.length > maxTrail) trail.shift();
+    }
+
+    window.addEventListener('mousemove', (e) => pushPointer(e.clientX, e.clientY));
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches && e.touches[0]) {
+        pushPointer(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    function renderLoop() {
+      ctx.clearRect(0, 0, width, height);
+
+      if (!isMobile) {
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+
+          const dx = mouseX - p.x;
+          const dy = mouseY - p.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 110) {
+            const force = (110 - dist) / 110;
+            p.x -= (dx / dist) * force * 3.5;
+            p.y -= (dy / dist) * force * 3.5;
+          }
+
+          ctx.fillStyle = `rgba(52, 211, 153, ${p.alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      if (trail.length > 2) {
+        ctx.save();
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = 'rgba(52, 211, 153, 0.95)';
+        ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+
+        for (let i = 0; i < trail.length - 1; i++) {
+          const ratio = (i + 1) / trail.length;
+          ctx.lineWidth = ratio * (isMobile ? 2.5 : 3.8);
+          ctx.beginPath();
+          ctx.moveTo(trail[i].x, trail[i].y);
+          ctx.lineTo(trail[i + 1].x, trail[i + 1].y);
+          ctx.stroke();
+        }
+
+        ctx.shadowBlur = 3;
+        ctx.shadowColor = 'rgba(240, 253, 244, 1)';
+        ctx.strokeStyle = 'rgba(240, 253, 244, 0.95)';
+
+        for (let i = 0; i < trail.length - 1; i++) {
+          const ratio = (i + 1) / trail.length;
+          ctx.lineWidth = ratio * (isMobile ? 1.2 : 1.5);
+          ctx.beginPath();
+          ctx.moveTo(trail[i].x, trail[i].y);
+          ctx.lineTo(trail[i + 1].x, trail[i + 1].y);
+          ctx.stroke();
+        }
+
+        ctx.restore();
+        trail.shift();
+      }
+
+      requestAnimationFrame(renderLoop);
+    }
+    renderLoop();
+
+    // 2. Parallax Shift on Glowing Oval
+    const glowOval = document.getElementById('glow-oval');
+    if (!isMobile) {
+      window.addEventListener('mousemove', (e) => {
+        const nx = (e.clientX / window.innerWidth - 0.5);
+        const ny = (e.clientY / window.innerHeight - 0.5);
+        if (glowOval) glowOval.style.transform = `translate3d(${nx * -30}px, ${ny * -30}px, 0) rotate(-18deg)`;
+      });
+    }
+
+    // 3. Audio Synthesizer Cues
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function unlockAudio() {
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      window.removeEventListener('touchstart', unlockAudio);
+      window.removeEventListener('click', unlockAudio);
+    }
+    window.addEventListener('touchstart', unlockAudio, { passive: true });
+    window.addEventListener('click', unlockAudio);
+
+    function playTone(freq = 440, duration = 0.08) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.045, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+
+    function playRubberDuckSqueak() {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const t = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'triangle';
+      const baseFreq = 520 + Math.random() * 40;
+      osc.frequency.setValueAtTime(baseFreq, t);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 2.0, t + 0.07);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.15, t + 0.14);
+
+      gain.gain.setValueAtTime(0.09, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(t);
+      osc.stop(t + 0.15);
+    }
+
+    // 4. Stable Vertical Transition Engine
+    const navIndicator = document.getElementById('nav-indicator');
+    const menuButtons = document.querySelectorAll('.menu-item');
+    const stages = {
+      welcome: document.getElementById('view-welcome'),
+      apps: document.getElementById('view-apps'),
+      games: document.getElementById('view-games'),
+      webapps: document.getElementById('view-webapps')
+    };
+
+    let currentIndex = 0;
+
+    function updatePillPos(targetButton) {
+      if (!targetButton || !navIndicator) return;
+      const targetTop = targetButton.offsetTop + (targetButton.offsetHeight / 2) - 3;
+      navIndicator.style.transform = `translateY(${targetTop}px)`;
+    }
+
+    const activeInitial = document.querySelector('.menu-item.active');
+    if (activeInitial) updatePillPos(activeInitial);
+
+    menuButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const newIndex = parseInt(btn.getAttribute('data-index'), 10);
+        if (newIndex === currentIndex) return;
+
+        const movingDownwards = newIndex > currentIndex;
+        menuButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        updatePillPos(btn);
+
+        const currentCard = document.querySelector('.stage-card.card-active');
+        const targetTab = btn.getAttribute('data-tab');
+        const nextCard = stages[targetTab];
+
+        if (currentCard && nextCard) {
+          currentCard.classList.remove('card-active');
+          currentCard.classList.add(movingDownwards ? 'exit-to-top' : 'exit-to-bottom');
+
+          nextCard.style.display = 'flex';
+          nextCard.classList.remove('enter-from-bottom', 'enter-from-top', 'exit-to-top', 'exit-to-bottom');
+          nextCard.classList.add(movingDownwards ? 'enter-from-bottom' : 'enter-from-top');
+
+          void nextCard.offsetWidth;
+
+          nextCard.classList.add('card-active');
+          nextCard.classList.remove('enter-from-bottom', 'enter-from-top');
+
+          // Trigger Pixel-Watch Fisheye update on entry
+          updatePixelFisheye(nextCard);
+
+          setTimeout(() => {
+            currentCard.style.display = 'none';
+            currentCard.classList.remove('exit-to-top', 'exit-to-bottom');
+          }, 280);
+        }
+
+        currentIndex = newIndex;
+        playTone(520, 0.06);
+      });
+    });
+
+    // 5. Google Pixel Watch Fisheye Scroll Logic
+    function updatePixelFisheye(card) {
+      if (!card) return;
+      const parentRect = card.getBoundingClientRect();
+      const centerY = parentRect.top + (parentRect.height / 2);
+      const items = card.querySelectorAll('.pixel-item');
+
+      items.forEach(item => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenterY = itemRect.top + (itemRect.height / 2);
+        const dist = Math.abs(centerY - itemCenterY);
+        const maxDist = parentRect.height / 1.6;
+
+        // Dynamic scale and opacity mapping (Peak at center)
+        let factor = 1 - Math.min(dist / maxDist, 1);
+        let scale = 0.90 + (factor * 0.14); // 0.90 at edges -> 1.04 at dead center
+        let opacity = 0.45 + (factor * 0.55); // 0.45 -> 1.0
+
+        item.style.transform = `scale(${scale})`;
+        item.style.opacity = opacity;
+      });
+    }
+
+    // Attach scroll listeners to all scrollable stage cards
+    document.querySelectorAll('.stage-card').forEach(card => {
+      card.addEventListener('scroll', () => updatePixelFisheye(card), { passive: true });
+    });
+
+    // Initial pass on load
+    setTimeout(() => {
+      const activeCard = document.querySelector('.stage-card.card-active');
+      if (activeCard) updatePixelFisheye(activeCard);
+    }, 100);
+
+    // 6. Sub-Toggles (Android / Windows)
+    const btnShowAndroidApps = document.getElementById('btn-show-android-apps');
+    const btnShowWindowsApps = document.getElementById('btn-show-windows-apps');
+    const stackAndroidApps = document.getElementById('stack-android-apps');
+    const stackWindowsApps = document.getElementById('stack-windows-apps');
+
+    if (btnShowAndroidApps && btnShowWindowsApps) {
+      btnShowAndroidApps.addEventListener('click', () => {
+        btnShowAndroidApps.classList.add('active');
+        btnShowWindowsApps.classList.remove('active');
+        stackAndroidApps.style.display = 'flex';
+        stackWindowsApps.style.display = 'none';
+        updatePixelFisheye(document.getElementById('view-apps'));
+        playTone(460, 0.05);
+      });
+
+      btnShowWindowsApps.addEventListener('click', () => {
+        btnShowWindowsApps.classList.add('active');
+        btnShowAndroidApps.classList.remove('active');
+        stackWindowsApps.style.display = 'flex';
+        stackAndroidApps.style.display = 'none';
+        playTone(490, 0.05);
+      });
+    }
+
+    const btnShowWindowsGames = document.getElementById('btn-show-windows-games');
+    const btnShowAndroidGames = document.getElementById('btn-show-android-games');
+    const stackWindowsGames = document.getElementById('stack-windows-games');
+    const stackAndroidGames = document.getElementById('stack-android-games');
+
+    if (btnShowWindowsGames && btnShowAndroidGames) {
+      btnShowWindowsGames.addEventListener('click', () => {
+        btnShowWindowsGames.classList.add('active');
+        btnShowAndroidGames.classList.remove('active');
+        stackWindowsGames.style.display = 'flex';
+        stackAndroidGames.style.display = 'none';
+        updatePixelFisheye(document.getElementById('view-games'));
+        playTone(460, 0.05);
+      });
+
+      btnShowAndroidGames.addEventListener('click', () => {
+        btnShowAndroidGames.classList.add('active');
+        btnShowWindowsGames.classList.remove('active');
+        stackAndroidGames.style.display = 'flex';
+        stackWindowsGames.style.display = 'none';
+        playTone(490, 0.05);
+      });
+    }
+
+    // 7. Zero-Delay Emerald Rubber Duck (Persistent Storage)
+    let squeaks = parseInt(localStorage.getItem('caviar_global_squeaks') || '0', 10);
+    const duckToy = document.getElementById('duck-toy');
+    const duckSprite = document.getElementById('duck-sprite');
+    const duckCounter = document.getElementById('duck-counter');
+
+    if (duckCounter) {
+      duckCounter.textContent = `${squeaks} squeak${squeaks === 1 ? '' : 's'}`;
+    }
+
+    function triggerDuck(clientX, clientY) {
+      squeaks++;
+      localStorage.setItem('caviar_global_squeaks', squeaks);
+      if (duckCounter) duckCounter.textContent = `${squeaks} squeak${squeaks === 1 ? '' : 's'}`;
+
+      if (duckSprite) {
+        duckSprite.classList.add('duck-squash');
+        setTimeout(() => duckSprite.classList.remove('duck-squash'), 90);
+      }
+
+      playRubberDuckSqueak();
+
+      const pop = document.createElement('div');
+      pop.className = 'duck-pop-note';
+      pop.textContent = `+1`;
+      pop.style.left = `${clientX - 10}px`;
+      pop.style.top = `${clientY - 20}px`;
+      pop.style.setProperty('--mx', `${(Math.random() - 0.5) * 26}px`);
+      document.body.appendChild(pop);
+      setTimeout(() => pop.remove(), 600);
+    }
+
+    if (duckToy) {
+      duckToy.addEventListener('click', (e) => triggerDuck(e.clientX, e.clientY));
+      duckToy.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches[0]) {
+          triggerDuck(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      }, { passive: true });
+    }
+  </script>
+</body>
+</html>
