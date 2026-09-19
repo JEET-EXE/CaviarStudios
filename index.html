@@ -11,10 +11,10 @@
     :root {
       --bg: #050d0a;
       --bg-gradient: radial-gradient(circle at 75% 35%, #0a2118 0%, #06120e 55%, #030806 100%);
-      --surface-glass: rgba(8, 22, 16, 0.62);
-      --surface-hover: rgba(16, 38, 28, 0.78);
-      --surface-sub: rgba(6, 17, 12, 0.68);
-      --border-glass: rgba(52, 211, 153, 0.22);
+      --surface-glass: rgba(8, 22, 16, 0.72);
+      --surface-hover: rgba(16, 38, 28, 0.85);
+      --surface-sub: rgba(6, 17, 12, 0.75);
+      --border-glass: rgba(52, 211, 153, 0.2);
       --border-accent: rgba(52, 211, 153, 0.48);
       --primary: #10b981;
       --primary-hover: #34d399;
@@ -54,9 +54,10 @@
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
-      perspective: 1200px;
+      contain: paint;
     }
 
+    /* Hardware Accelerated Canvas */
     #ambient-canvas {
       position: fixed;
       top: 0;
@@ -65,6 +66,8 @@
       height: 100vh;
       pointer-events: none;
       z-index: 1;
+      transform: translateZ(0);
+      will-change: transform;
     }
 
     .bg-parallax-container {
@@ -76,6 +79,7 @@
       pointer-events: none;
       z-index: 0;
       overflow: hidden;
+      transform: translateZ(0);
     }
 
     .glowing-oval {
@@ -84,24 +88,22 @@
       right: 12%;
       width: 500px;
       height: 560px;
-      border-radius: 50% / 60%;
-      background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.24) 0%, rgba(6, 78, 59, 0.38) 45%, transparent 70%);
-      filter: blur(45px);
-      box-shadow: 0 0 100px rgba(16, 185, 129, 0.15);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.2) 0%, rgba(6, 78, 59, 0.3) 45%, transparent 70%);
+      filter: blur(40px);
       will-change: transform;
-      transform: rotate(-18deg);
+      transform: rotate(-18deg) translateZ(0);
       opacity: 0.85;
     }
 
     .parallax-square {
       position: absolute;
       border-radius: 2.2rem;
-      border: 1px solid rgba(52, 211, 153, 0.18);
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.03) 100%);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), inset 0 0 35px rgba(52, 211, 153, 0.05);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      border: 1px solid rgba(52, 211, 153, 0.15);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(6, 78, 59, 0.02) 100%);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
       will-change: transform;
+      transform: translateZ(0);
       pointer-events: none;
     }
 
@@ -110,7 +112,7 @@
       left: 8%;
       width: 320px;
       height: 320px;
-      transform: rotate(24deg);
+      transform: rotate(24deg) translateZ(0);
     }
 
     .square-2 {
@@ -118,7 +120,7 @@
       right: 10%;
       width: 440px;
       height: 440px;
-      transform: rotate(-16deg);
+      transform: rotate(-16deg) translateZ(0);
     }
 
     .top-header {
@@ -128,6 +130,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      contain: layout style;
     }
 
     .brand-cluster {
@@ -149,12 +152,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-      transition: transform 0.2s ease;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      transition: transform 0.15s cubic-bezier(0.2, 0, 0.1, 1);
     }
 
     .brand-cluster:hover .caviar-logo-icon {
-      transform: rotate(12deg) scale(1.06);
+      transform: rotate(10deg) scale(1.05);
       border-color: var(--primary-hover);
     }
 
@@ -185,10 +188,10 @@
       border-radius: 0.6rem;
       pointer-events: none;
       white-space: nowrap;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 10px rgba(16, 185, 129, 0.2);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
       opacity: 0;
       transform: translateY(-4px);
-      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.15s ease, transform 0.15s ease;
       z-index: 100;
     }
 
@@ -221,7 +224,6 @@
       display: flex;
       align-items: center;
       gap: 0.65rem;
-      backdrop-filter: blur(8px);
     }
 
     .status-dot {
@@ -229,13 +231,13 @@
       height: 7px;
       border-radius: 50%;
       background: var(--primary);
-      box-shadow: 0 0 10px var(--primary);
+      box-shadow: 0 0 8px var(--primary);
       animation: pulseDot 2s infinite ease-in-out;
     }
 
     @keyframes pulseDot {
       0%, 100% { opacity: 0.5; transform: scale(0.9); }
-      50% { opacity: 1; transform: scale(1.2); }
+      50% { opacity: 1; transform: scale(1.15); }
     }
 
     .client-viewport {
@@ -250,6 +252,7 @@
       max-width: 1280px;
       width: 100%;
       margin: 0 auto;
+      contain: layout;
     }
 
     .menu-column {
@@ -267,9 +270,9 @@
       height: 6px;
       background: #10b981;
       border-radius: 3px;
-      box-shadow: 0 0 14px 2px rgba(16, 185, 129, 0.95);
+      box-shadow: 0 0 10px 1px rgba(16, 185, 129, 0.9);
       pointer-events: none;
-      transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.16s cubic-bezier(0.1, 0.9, 0.2, 1);
       z-index: 5;
     }
 
@@ -288,7 +291,8 @@
       align-items: center;
       gap: 0.8rem;
       padding: 0.35rem 0;
-      transition: color 0.15s, transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: color 0.1s ease, transform 0.12s cubic-bezier(0.1, 0.9, 0.2, 1);
+      will-change: transform, color;
     }
 
     .menu-item:hover {
@@ -316,15 +320,14 @@
       padding: 0.45rem 0.9rem;
       border-radius: 0.55rem;
       text-decoration: none;
-      backdrop-filter: blur(12px);
-      transition: all 0.15s ease;
+      transition: transform 0.1s ease, border-color 0.1s ease, color 0.1s ease;
+      will-change: transform;
     }
 
     .sub-pill:hover {
       border-color: var(--border-accent);
       color: var(--text);
       transform: translateY(-2px);
-      box-shadow: 0 4px 14px var(--primary-glow);
     }
 
     .content-stage {
@@ -333,18 +336,19 @@
       position: relative;
       min-height: 560px;
       border-radius: 1.8rem;
+      contain: layout style;
     }
 
+    /* Highly Optimized Frosted Glass with Zero Jitter */
     .stage-card {
       background: var(--surface-glass);
       border: 1px solid var(--border-glass);
       border-top: 1px solid rgba(255, 255, 255, 0.12);
-      border-left: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 1.8rem;
       padding: 2.4rem;
-      backdrop-filter: blur(28px) saturate(160%);
-      -webkit-backdrop-filter: blur(28px) saturate(160%);
-      box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.6);
       display: none;
       flex-direction: column;
       gap: 1.4rem;
@@ -356,8 +360,9 @@
       overflow-y: auto;
       scrollbar-width: none;
       opacity: 0;
+      transform: translateZ(0);
       will-change: transform, opacity;
-      transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+      transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .stage-card::-webkit-scrollbar {
@@ -370,24 +375,24 @@
     }
 
     .stage-card.enter-from-bottom {
-      transform: translate3d(0, 35px, 0);
+      transform: translate3d(0, 20px, 0);
     }
     .stage-card.enter-from-top {
-      transform: translate3d(0, -35px, 0);
+      transform: translate3d(0, -20px, 0);
     }
     .stage-card.exit-to-top {
-      transform: translate3d(0, -35px, 0) !important;
+      transform: translate3d(0, -20px, 0) !important;
       opacity: 0 !important;
     }
     .stage-card.exit-to-bottom {
-      transform: translate3d(0, 35px, 0) !important;
+      transform: translate3d(0, 20px, 0) !important;
       opacity: 0 !important;
     }
 
     .stage-card.card-active {
       display: flex;
       opacity: 1;
-      transform: translate3d(0, 0, 0) scale(1);
+      transform: translate3d(0, 0, 0);
     }
 
     .stage-card:hover {
@@ -425,7 +430,6 @@
     .welcome-logo-svg {
       width: 145px;
       height: auto;
-      filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.3));
     }
 
     .toggle-bar {
@@ -435,7 +439,6 @@
       padding: 0.35rem;
       border-radius: 0.75rem;
       border: 1px solid var(--border-glass);
-      backdrop-filter: blur(12px);
       width: fit-content;
     }
 
@@ -449,14 +452,13 @@
       padding: 0.4rem 1rem;
       border-radius: 0.5rem;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: background 0.12s ease, color 0.12s ease;
     }
 
     .toggle-btn.active {
       background: var(--primary);
       color: #040806;
       font-weight: 700;
-      box-shadow: 0 2px 10px var(--primary-glow);
     }
 
     .pixel-scroll-stack {
@@ -467,7 +469,6 @@
     }
 
     .pixel-item {
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), filter 0.2s ease;
       will-change: transform, opacity;
       transform-origin: center center;
     }
@@ -480,14 +481,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      backdrop-filter: blur(14px);
-      transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+      will-change: transform;
     }
 
     .release-card:hover {
       background: var(--surface-hover);
       border-color: var(--border-accent);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      transform: translateY(-2px);
     }
 
     .release-left {
@@ -531,13 +532,11 @@
       cursor: pointer;
       position: relative;
       z-index: 50;
-      transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
-      box-shadow: 0 4px 14px var(--primary-glow);
+      transition: background 0.12s ease, transform 0.12s ease;
     }
 
     .btn-launch:hover {
       background: var(--primary-hover);
-      box-shadow: 0 6px 20px rgba(52, 211, 153, 0.5);
       transform: scale(1.04);
     }
 
@@ -552,7 +551,6 @@
       justify-content: center;
       text-align: center;
       gap: 0.8rem;
-      backdrop-filter: blur(10px);
     }
 
     .cs-icon {
@@ -563,7 +561,7 @@
 
     @keyframes gentleBounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
+      50% { transform: translateY(-5px); }
     }
 
     .cs-title {
@@ -591,22 +589,23 @@
       align-items: center;
       cursor: pointer;
       transform-origin: bottom center;
+      will-change: transform;
     }
 
     .duck-svg-wrapper {
       width: 62px;
       height: 62px;
-      filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 10px var(--primary-glow));
       transform-origin: bottom center;
-      transition: transform 0.08s ease-out;
+      transition: transform 0.06s ease-out;
+      will-change: transform;
     }
 
     .duck-toy:hover .duck-svg-wrapper {
-      transform: scale(1.1) rotate(4deg);
+      transform: scale(1.08) rotate(3deg);
     }
 
     .duck-squash {
-      transform: scale(1.4, 0.52) !important;
+      transform: scale(1.35, 0.55) !important;
     }
 
     .duck-badge {
@@ -619,7 +618,6 @@
       padding: 0.2rem 0.65rem;
       border-radius: 1rem;
       margin-bottom: 0.4rem;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
     }
 
     .duck-pop-note {
@@ -628,23 +626,35 @@
       font-size: 0.72rem;
       color: var(--primary-hover);
       pointer-events: none;
-      animation: gentleFloat 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: gentleFloat 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
       z-index: 100000;
     }
 
     @keyframes gentleFloat {
       0% { opacity: 1; transform: translate(0, 0); }
-      100% { opacity: 0; transform: translate(var(--mx, 0px), -36px); }
+      100% { opacity: 0; transform: translate(var(--mx, 0px), -32px); }
     }
 
-    /* ========================================================
-       ULTRA-CLEAN NO-SCROLL MOBILE LAYOUT (APP FEEL)
-       ======================================================== */
     @media (max-width: 768px) {
       body {
         height: 100vh;
         height: 100dvh;
-        overflow: hidden; /* Zero page-level scrolling on mobile */
+        overflow: hidden;
+      }
+
+      .stage-card, .menu-column, .release-card, .sub-pill, .toggle-bar, .coming-soon-box {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+
+      .stage-card {
+        background: #091a13 !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7) !important;
+        padding: 1.25rem 1.15rem;
+        border-radius: 1.3rem;
+        max-height: 100%;
+        height: 100%;
+        gap: 0.85rem;
       }
 
       .top-header {
@@ -680,20 +690,18 @@
         overflow: hidden;
       }
 
-      /* Native horizontal segmented menu bar */
       .menu-column {
         min-width: 100%;
         flex-direction: row;
         gap: 0.35rem;
         padding: 0.3rem;
-        background: rgba(11, 24, 18, 0.75);
+        background: #091a13 !important;
         border: 1px solid var(--border-glass);
         border-radius: 0.9rem;
-        backdrop-filter: blur(16px);
       }
 
       .nav-pill-indicator {
-        display: none; /* Replaced by active button styling on mobile */
+        display: none;
       }
 
       .menu-item {
@@ -705,7 +713,6 @@
         justify-content: center;
         flex: 1;
         border-radius: 0.65rem;
-        transition: all 0.18s ease;
       }
 
       .menu-item:hover {
@@ -715,30 +722,20 @@
       .menu-item.active {
         background: var(--primary);
         color: #030806;
-        box-shadow: 0 2px 10px var(--primary-glow);
       }
 
       .sub-menu-pills {
-        display: none; /* Pushed into welcome or bottom drawer for clean viewport */
+        display: none;
       }
 
-      /* Compact, perfectly fitted viewport stage */
       .content-stage {
         width: 100%;
         max-width: 100%;
         flex: 1;
-        min-height: 0; /* Lets flexbox size accurately */
+        min-height: 0;
         height: 100%;
         position: relative;
         overflow: hidden;
-      }
-
-      .stage-card {
-        padding: 1.25rem 1.15rem;
-        border-radius: 1.3rem;
-        max-height: 100%;
-        height: 100%;
-        gap: 0.85rem;
       }
 
       #view-welcome {
@@ -751,7 +748,7 @@
       }
 
       .welcome-logo-svg {
-        width: 100px;
+        width: 95px;
       }
 
       .stage-title {
@@ -765,6 +762,7 @@
 
       .toggle-bar {
         padding: 0.25rem;
+        background: #06140e !important;
       }
 
       .toggle-btn {
@@ -773,13 +771,14 @@
       }
 
       .pixel-scroll-stack {
-        padding: 0.4rem 0 3.5rem; /* Room for rubber duck */
+        padding: 0.4rem 0 3.5rem;
         gap: 0.65rem;
       }
 
       .release-card {
         padding: 0.85rem 1rem;
         border-radius: 0.95rem;
+        background: #06140e !important;
       }
 
       .release-icon {
@@ -889,7 +888,7 @@
         <div class="stage-desc">
           Welcome to Caviar Studios. Built as a solo-developer powerhouse driven by curiosity and an uncompromising commitment to crafting high-quality digital experiences.
         </div>
-        <div class="stage-desc" style="background: var(--surface-sub); border: 1px solid var(--border-glass); padding: 0.95rem; border-radius: 0.85rem;">
+        <div class="stage-desc" style="background: rgba(6, 17, 12, 0.85); border: 1px solid var(--border-glass); padding: 0.95rem; border-radius: 0.85rem;">
           <strong style="color: var(--text);">Core Specialization:</strong><br>
           I specialize in <strong>Windows and Android software architecture</strong> — engineering lean utilities with zero fluff.
         </div>
@@ -1039,7 +1038,7 @@
 
   </main>
 
-  <!-- Minimalist Emerald Rubber Duck -->
+  <!-- Rubber Duck -->
   <div class="duck-toy" id="duck-toy" title="Squeeze">
     <div class="duck-badge" id="duck-counter">0 squeaks</div>
     <div class="duck-svg-wrapper" id="duck-sprite">
@@ -1066,157 +1065,172 @@
   </div>
 
   <script>
-    // 1. Pointer & Ambient Particles
-    const canvas = document.getElementById('ambient-canvas');
-    const ctx = canvas.getContext('2d');
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
-
     const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window);
 
-    window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-    });
+    // 1. High-Performance 120Hz/240Hz Direct Canvas Renderer
+    const canvas = document.getElementById('ambient-canvas');
+    if (!isMobile && canvas) {
+      const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
 
-    const particleCount = isMobile ? 0 : 38;
-    const particles = [];
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.6,
-        vy: (Math.random() - 0.5) * 0.6,
-        size: Math.random() * 2 + 1.2,
-        alpha: Math.random() * 0.35 + 0.15
-      });
-    }
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      }, { passive: true });
 
-    let mouseX = -1000, mouseY = -1000;
-    const trail = [];
-    const maxTrail = 18;
+      // Lightweight Particles (Pre-allocated)
+      const particleCount = 28;
+      const particles = new Float32Array(particleCount * 5); // x, y, vx, vy, size
+      for (let i = 0; i < particleCount; i++) {
+        const idx = i * 5;
+        particles[idx] = Math.random() * width;
+        particles[idx + 1] = Math.random() * height;
+        particles[idx + 2] = (Math.random() - 0.5) * 0.7;
+        particles[idx + 3] = (Math.random() - 0.5) * 0.7;
+        particles[idx + 4] = Math.random() * 1.8 + 1.2;
+      }
 
-    function pushPointer(x, y) {
-      mouseX = x;
-      mouseY = y;
-      trail.push({ x, y });
-      if (trail.length > maxTrail) trail.shift();
-    }
+      // Zero-lag Pointer Queue
+      let pointerX = -1000, pointerY = -1000;
+      const trailPoints = [];
+      const maxTrailPoints = 16;
 
-    if (!isMobile) {
-      window.addEventListener('mousemove', (e) => pushPointer(e.clientX, e.clientY));
-    }
+      function addPoint(x, y) {
+        pointerX = x;
+        pointerY = y;
+        const now = performance.now();
+        trailPoints.push({ x, y, t: now });
+        if (trailPoints.length > maxTrailPoints) {
+          trailPoints.shift();
+        }
+      }
 
-    function renderLoop() {
-      ctx.clearRect(0, 0, width, height);
+      window.addEventListener('pointermove', (e) => {
+        // Use coalesced raw events for 1000Hz gaming mice when available
+        if (e.getCoalescedEvents) {
+          const events = e.getCoalescedEvents();
+          for (let i = 0; i < events.length; i++) {
+            addPoint(events[i].clientX, events[i].clientY);
+          }
+        } else {
+          addPoint(e.clientX, e.clientY);
+        }
+      }, { passive: true });
 
-      if (!isMobile) {
-        particles.forEach(p => {
-          p.x += p.vx;
-          p.y += p.vy;
+      function renderFrame(now) {
+        ctx.clearRect(0, 0, width, height);
 
-          if (p.x < 0) p.x = width;
-          if (p.x > width) p.x = 0;
-          if (p.y < 0) p.y = height;
-          if (p.y > height) p.y = 0;
+        // Render Particles (Batch rendered without shadowBlur overhead)
+        ctx.fillStyle = 'rgba(52, 211, 153, 0.35)';
+        for (let i = 0; i < particleCount; i++) {
+          const idx = i * 5;
+          let px = (particles[idx] += particles[idx + 2]);
+          let py = (particles[idx + 1] += particles[idx + 3]);
+          const pSize = particles[idx + 4];
 
-          const dx = mouseX - p.x;
-          const dy = mouseY - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (px < 0) particles[idx] = width;
+          else if (px > width) particles[idx] = 0;
+          if (py < 0) particles[idx + 1] = height;
+          else if (py > height) particles[idx + 1] = 0;
 
-          if (dist < 110) {
-            const force = (110 - dist) / 110;
-            p.x -= (dx / dist) * force * 3.5;
-            p.y -= (dy / dist) * force * 3.5;
+          const dx = pointerX - px;
+          const dy = pointerY - py;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq < 10000 && distSq > 0) { // 100px radius
+            const dist = Math.sqrt(distSq);
+            const force = (100 - dist) / 100;
+            particles[idx] -= (dx / dist) * force * 4;
+            particles[idx + 1] -= (dy / dist) * force * 4;
           }
 
-          ctx.fillStyle = `rgba(52, 211, 153, ${p.alpha})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
-        });
-      }
-
-      if (!isMobile && trail.length > 2) {
-        ctx.save();
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = 'rgba(52, 211, 153, 0.95)';
-        ctx.strokeStyle = 'rgba(16, 185, 129, 0.45)';
-
-        for (let i = 0; i < trail.length - 1; i++) {
-          const ratio = (i + 1) / trail.length;
-          ctx.lineWidth = ratio * 3.8;
-          ctx.beginPath();
-          ctx.moveTo(trail[i].x, trail[i].y);
-          ctx.lineTo(trail[i + 1].x, trail[i + 1].y);
-          ctx.stroke();
+          ctx.fillRect(px, py, pSize, pSize);
         }
 
-        ctx.shadowBlur = 3;
-        ctx.shadowColor = 'rgba(240, 253, 244, 1)';
-        ctx.strokeStyle = 'rgba(240, 253, 244, 0.95)';
-
-        for (let i = 0; i < trail.length - 1; i++) {
-          const ratio = (i + 1) / trail.length;
-          ctx.lineWidth = ratio * 1.5;
-          ctx.beginPath();
-          ctx.moveTo(trail[i].x, trail[i].y);
-          ctx.lineTo(trail[i + 1].x, trail[i + 1].y);
-          ctx.stroke();
+        // Clean out stale trail points (> 240ms)
+        while (trailPoints.length > 0 && now - trailPoints[0].t > 220) {
+          trailPoints.shift();
         }
 
-        ctx.restore();
-        trail.shift();
-      }
+        // Render Instant-Response Ribbon (No heavy blur, pure gradient velocity)
+        const len = trailPoints.length;
+        if (len > 2) {
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
 
-      requestAnimationFrame(renderLoop);
+          for (let i = 0; i < len - 1; i++) {
+            const p1 = trailPoints[i];
+            const p2 = trailPoints[i + 1];
+            const age = 1 - (now - p2.t) / 220;
+            if (age <= 0) continue;
+
+            const alpha = age * 0.6;
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineWidth = age * 3.5;
+            ctx.strokeStyle = `rgba(52, 211, 153, ${alpha})`;
+            ctx.stroke();
+
+            // Core highlight
+            ctx.lineWidth = age * 1.4;
+            ctx.strokeStyle = `rgba(240, 253, 244, ${age * 0.9})`;
+            ctx.stroke();
+          }
+        }
+
+        requestAnimationFrame(renderFrame);
+      }
+      requestAnimationFrame(renderFrame);
     }
-    renderLoop();
 
-    // 2. Parallax Backdrop
-    const glowOval = document.getElementById('glow-oval');
-    const square1 = document.getElementById('square-1');
-    const square2 = document.getElementById('square-2');
-
+    // 2. Parallax Throttled by RAF (Zero micro-stutter)
     if (!isMobile) {
-      window.addEventListener('mousemove', (e) => {
-        const nx = (e.clientX / window.innerWidth - 0.5);
-        const ny = (e.clientY / window.innerHeight - 0.5);
+      const glowOval = document.getElementById('glow-oval');
+      const square1 = document.getElementById('square-1');
+      const square2 = document.getElementById('square-2');
+      let targetNX = 0, targetNY = 0;
+      let currNX = 0, currNY = 0;
 
-        if (glowOval) glowOval.style.transform = `translate3d(${nx * -30}px, ${ny * -30}px, 0) rotate(-18deg)`;
-        if (square1) square1.style.transform = `translate3d(${nx * 40}px, ${ny * 35}px, 0) rotate(24deg)`;
-        if (square2) square2.style.transform = `translate3d(${nx * -50}px, ${ny * -45}px, 0) rotate(-16deg)`;
-      });
+      window.addEventListener('mousemove', (e) => {
+        targetNX = (e.clientX / window.innerWidth - 0.5);
+        targetNY = (e.clientY / window.innerHeight - 0.5);
+      }, { passive: true });
+
+      function updateParallax() {
+        currNX += (targetNX - currNX) * 0.08;
+        currNY += (targetNY - currNY) * 0.08;
+
+        if (glowOval) glowOval.style.transform = `translate3d(${currNX * -28}px, ${currNY * -28}px, 0) rotate(-18deg)`;
+        if (square1) square1.style.transform = `translate3d(${currNX * 35}px, ${currNY * 30}px, 0) rotate(24deg)`;
+        if (square2) square2.style.transform = `translate3d(${currNX * -45}px, ${currNY * -40}px, 0) rotate(-16deg)`;
+
+        requestAnimationFrame(updateParallax);
+      }
+      requestAnimationFrame(updateParallax);
     }
 
     // 3. Audio Engine
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function unlockAudio() {
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      window.removeEventListener('touchstart', unlockAudio);
-      window.removeEventListener('click', unlockAudio);
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      window.removeEventListener('pointerdown', unlockAudio);
     }
-    window.addEventListener('touchstart', unlockAudio, { passive: true });
-    window.addEventListener('click', unlockAudio);
+    window.addEventListener('pointerdown', unlockAudio, { passive: true });
 
-    function playTone(freq = 440, duration = 0.08) {
+    function playTone(freq = 440, duration = 0.06) {
       if (audioCtx.state === 'suspended') audioCtx.resume();
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
 
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      gain.gain.setValueAtTime(0.045, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
 
       osc.connect(gain);
       gain.connect(audioCtx.destination);
-
       osc.start();
       osc.stop(audioCtx.currentTime + duration);
     }
@@ -1230,20 +1244,19 @@
       osc.type = 'triangle';
       const baseFreq = 520 + Math.random() * 40;
       osc.frequency.setValueAtTime(baseFreq, t);
-      osc.frequency.exponentialRampToValueAtTime(baseFreq * 2.0, t + 0.07);
-      osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.15, t + 0.14);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 2.0, t + 0.06);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.15, t + 0.12);
 
-      gain.gain.setValueAtTime(0.09, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
+      gain.gain.setValueAtTime(0.08, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
 
       osc.connect(gain);
       gain.connect(audioCtx.destination);
-
       osc.start(t);
-      osc.stop(t + 0.15);
+      osc.stop(t + 0.13);
     }
 
-    // 4. Stable Vertical Transition Engine
+    // 4. Lightning-Fast Tab Switcher
     const navIndicator = document.getElementById('nav-indicator');
     const menuButtons = document.querySelectorAll('.menu-item');
     const stages = {
@@ -1255,9 +1268,9 @@
 
     let currentIndex = 0;
 
-    function updatePillPos(targetButton) {
-      if (!targetButton || !navIndicator || isMobile) return;
-      const targetTop = targetButton.offsetTop + (targetButton.offsetHeight / 2) - 3;
+    function updatePillPos(btn) {
+      if (!btn || !navIndicator || isMobile) return;
+      const targetTop = btn.offsetTop + (btn.offsetHeight / 2) - 3;
       navIndicator.style.transform = `translateY(${targetTop}px)`;
     }
 
@@ -1296,46 +1309,55 @@
           setTimeout(() => {
             currentCard.style.display = 'none';
             currentCard.classList.remove('exit-to-top', 'exit-to-bottom');
-          }, 280);
+          }, 180);
         }
 
         currentIndex = newIndex;
-        playTone(520, 0.06);
+        playTone(520, 0.05);
       });
     });
 
-    // 5. Google Pixel Watch Fisheye Scroll Logic
+    // 5. Optimized Pixel Fisheye
+    let scrollRafId = null;
     function updatePixelFisheye(card) {
       if (!card) return;
       const parentRect = card.getBoundingClientRect();
       const centerY = parentRect.top + (parentRect.height / 2);
       const items = card.querySelectorAll('.pixel-item');
 
-      items.forEach(item => {
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
         const itemRect = item.getBoundingClientRect();
         const itemCenterY = itemRect.top + (itemRect.height / 2);
         const dist = Math.abs(centerY - itemCenterY);
-        const maxDist = parentRect.height / 1.6;
+        const maxDist = parentRect.height * 0.65;
 
         let factor = 1 - Math.min(dist / maxDist, 1);
-        let scale = 0.90 + (factor * 0.14);
-        let opacity = 0.45 + (factor * 0.55);
+        let scale = 0.92 + (factor * 0.12);
+        let opacity = 0.5 + (factor * 0.5);
 
         item.style.transform = `scale(${scale})`;
         item.style.opacity = opacity;
-      });
+      }
     }
 
     document.querySelectorAll('.stage-card').forEach(card => {
-      card.addEventListener('scroll', () => updatePixelFisheye(card), { passive: true });
+      card.addEventListener('scroll', () => {
+        if (!scrollRafId) {
+          scrollRafId = requestAnimationFrame(() => {
+            updatePixelFisheye(card);
+            scrollRafId = null;
+          });
+        }
+      }, { passive: true });
     });
 
     setTimeout(() => {
       const activeCard = document.querySelector('.stage-card.card-active');
       if (activeCard) updatePixelFisheye(activeCard);
-    }, 100);
+    }, 50);
 
-    // 6. Sub-Toggles (Android / Windows)
+    // 6. Sub-Toggles
     const btnShowAndroidApps = document.getElementById('btn-show-android-apps');
     const btnShowWindowsApps = document.getElementById('btn-show-windows-apps');
     const stackAndroidApps = document.getElementById('stack-android-apps');
@@ -1348,7 +1370,7 @@
         stackAndroidApps.style.display = 'flex';
         stackWindowsApps.style.display = 'none';
         updatePixelFisheye(document.getElementById('view-apps'));
-        playTone(460, 0.05);
+        playTone(460, 0.04);
       });
 
       btnShowWindowsApps.addEventListener('click', () => {
@@ -1356,7 +1378,7 @@
         btnShowAndroidApps.classList.remove('active');
         stackWindowsApps.style.display = 'flex';
         stackAndroidApps.style.display = 'none';
-        playTone(490, 0.05);
+        playTone(490, 0.04);
       });
     }
 
@@ -1372,7 +1394,7 @@
         stackWindowsGames.style.display = 'flex';
         stackAndroidGames.style.display = 'none';
         updatePixelFisheye(document.getElementById('view-games'));
-        playTone(460, 0.05);
+        playTone(460, 0.04);
       });
 
       btnShowAndroidGames.addEventListener('click', () => {
@@ -1380,11 +1402,11 @@
         btnShowWindowsGames.classList.remove('active');
         stackAndroidGames.style.display = 'flex';
         stackWindowsGames.style.display = 'none';
-        playTone(490, 0.05);
+        playTone(490, 0.04);
       });
     }
 
-    // 7. Rubber Duck (Persistent Storage)
+    // 7. Rubber Duck (Instant Trigger)
     let squeaks = parseInt(localStorage.getItem('caviar_global_squeaks') || '0', 10);
     const duckToy = document.getElementById('duck-toy');
     const duckSprite = document.getElementById('duck-sprite');
@@ -1401,7 +1423,7 @@
 
       if (duckSprite) {
         duckSprite.classList.add('duck-squash');
-        setTimeout(() => duckSprite.classList.remove('duck-squash'), 90);
+        setTimeout(() => duckSprite.classList.remove('duck-squash'), 70);
       }
 
       playRubberDuckSqueak();
@@ -1413,16 +1435,11 @@
       pop.style.top = `${clientY - 20}px`;
       pop.style.setProperty('--mx', `${(Math.random() - 0.5) * 26}px`);
       document.body.appendChild(pop);
-      setTimeout(() => pop.remove(), 600);
+      setTimeout(() => pop.remove(), 500);
     }
 
     if (duckToy) {
-      duckToy.addEventListener('click', (e) => triggerDuck(e.clientX, e.clientY));
-      duckToy.addEventListener('touchstart', (e) => {
-        if (e.touches && e.touches[0]) {
-          triggerDuck(e.touches[0].clientX, e.touches[0].clientY);
-        }
-      }, { passive: true });
+      duckToy.addEventListener('pointerdown', (e) => triggerDuck(e.clientX, e.clientY), { passive: true });
     }
   </script>
 </body>
