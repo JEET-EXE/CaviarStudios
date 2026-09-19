@@ -11,11 +11,11 @@
     :root {
       --bg: #050d0a;
       --bg-gradient: radial-gradient(circle at 75% 35%, #0a2118 0%, #06120e 55%, #030806 100%);
-      --surface: rgba(11, 24, 18, 0.88);
-      --surface-hover: rgba(16, 36, 27, 0.95);
-      --surface-sub: rgba(7, 17, 13, 0.82);
-      --border: rgba(52, 211, 153, 0.16);
-      --border-accent: rgba(52, 211, 153, 0.45);
+      --surface-glass: rgba(8, 22, 16, 0.62);
+      --surface-hover: rgba(16, 38, 28, 0.78);
+      --surface-sub: rgba(6, 17, 12, 0.68);
+      --border-glass: rgba(52, 211, 153, 0.22);
+      --border-accent: rgba(52, 211, 153, 0.48);
       --primary: #10b981;
       --primary-hover: #34d399;
       --primary-glow: rgba(16, 185, 129, 0.45);
@@ -64,10 +64,10 @@
       width: 100vw;
       height: 100vh;
       pointer-events: none;
-      z-index: 99999;
+      z-index: 1;
     }
 
-    .oval-glow-container {
+    .bg-parallax-container {
       position: fixed;
       top: 0;
       left: 0;
@@ -90,7 +90,35 @@
       box-shadow: 0 0 100px rgba(16, 185, 129, 0.15);
       will-change: transform;
       transform: rotate(-18deg);
-      opacity: 0.9;
+      opacity: 0.85;
+    }
+
+    .parallax-square {
+      position: absolute;
+      border-radius: 2.2rem;
+      border: 1px solid rgba(52, 211, 153, 0.18);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.03) 100%);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), inset 0 0 35px rgba(52, 211, 153, 0.05);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      will-change: transform;
+      pointer-events: none;
+    }
+
+    .square-1 {
+      top: 14%;
+      left: 8%;
+      width: 320px;
+      height: 320px;
+      transform: rotate(24deg);
+    }
+
+    .square-2 {
+      bottom: 12%;
+      right: 10%;
+      width: 440px;
+      height: 440px;
+      transform: rotate(-16deg);
     }
 
     .top-header {
@@ -187,7 +215,7 @@
       font-size: 0.72rem;
       color: var(--text-muted);
       background: rgba(11, 24, 18, 0.7);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-glass);
       padding: 0.45rem 1rem;
       border-radius: 2rem;
       display: flex;
@@ -280,14 +308,15 @@
     }
 
     .sub-pill {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: rgba(11, 24, 18, 0.7);
+      border: 1px solid var(--border-glass);
       color: var(--text-muted);
       font-family: var(--font-mono);
       font-size: 0.72rem;
       padding: 0.45rem 0.9rem;
       border-radius: 0.55rem;
       text-decoration: none;
+      backdrop-filter: blur(12px);
       transition: all 0.15s ease;
     }
 
@@ -307,13 +336,15 @@
     }
 
     .stage-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: var(--surface-glass);
+      border: 1px solid var(--border-glass);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 1.8rem;
       padding: 2.4rem;
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       display: none;
       flex-direction: column;
       gap: 1.4rem;
@@ -403,7 +434,8 @@
       background: var(--surface-sub);
       padding: 0.35rem;
       border-radius: 0.75rem;
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(12px);
       width: fit-content;
     }
 
@@ -442,19 +474,20 @@
 
     .release-card {
       background: var(--surface-sub);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-glass);
       border-radius: 1.15rem;
       padding: 1.15rem 1.45rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      backdrop-filter: blur(14px);
       transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     .release-card:hover {
       background: var(--surface-hover);
       border-color: var(--border-accent);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
     .release-left {
@@ -469,7 +502,7 @@
       height: 44px;
       border-radius: 12px;
       background: rgba(7, 16, 13, 0.8);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-glass);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -509,7 +542,7 @@
     }
 
     .coming-soon-box {
-      background: rgba(9, 20, 15, 0.5);
+      background: rgba(9, 20, 15, 0.45);
       border: 1px dashed rgba(52, 211, 153, 0.25);
       border-radius: 1.15rem;
       padding: 2.8rem 1.5rem;
@@ -519,6 +552,7 @@
       justify-content: center;
       text-align: center;
       gap: 0.8rem;
+      backdrop-filter: blur(10px);
     }
 
     .cs-icon {
@@ -603,56 +637,175 @@
       100% { opacity: 0; transform: translate(var(--mx, 0px), -36px); }
     }
 
+    /* ========================================================
+       ULTRA-CLEAN NO-SCROLL MOBILE LAYOUT (APP FEEL)
+       ======================================================== */
     @media (max-width: 768px) {
+      body {
+        height: 100vh;
+        height: 100dvh;
+        overflow: hidden; /* Zero page-level scrolling on mobile */
+      }
+
       .top-header {
-        padding: 1.2rem 1.4rem;
+        padding: 0.85rem 1.2rem;
+      }
+      .brand-cluster {
+        gap: 0.65rem;
+      }
+      .caviar-logo-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+      }
+      .caviar-logo-icon svg {
+        width: 20px;
+        height: 20px;
       }
       .brand-text-title {
-        font-size: 1.1rem;
+        font-size: 1rem;
       }
       .status-badge {
         display: none;
       }
+
       .client-viewport {
         flex-direction: column;
         align-items: stretch;
-        padding: 0.5rem 1rem 7.5rem;
-        gap: 1.5rem;
+        justify-content: flex-start;
+        padding: 0.2rem 1rem 1rem;
+        gap: 0.75rem;
+        flex: 1;
+        height: calc(100dvh - 65px);
+        overflow: hidden;
       }
+
+      /* Native horizontal segmented menu bar */
       .menu-column {
         min-width: 100%;
-        padding-left: 1.8rem;
+        flex-direction: row;
         gap: 0.35rem;
+        padding: 0.3rem;
+        background: rgba(11, 24, 18, 0.75);
+        border: 1px solid var(--border-glass);
+        border-radius: 0.9rem;
+        backdrop-filter: blur(16px);
       }
-      .menu-item {
-        font-size: 1.6rem;
-      }
+
       .nav-pill-indicator {
-        left: 0;
+        display: none; /* Replaced by active button styling on mobile */
       }
+
+      .menu-item {
+        font-size: 0.76rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 0.5rem 0.2rem;
+        text-align: center;
+        justify-content: center;
+        flex: 1;
+        border-radius: 0.65rem;
+        transition: all 0.18s ease;
+      }
+
+      .menu-item:hover {
+        transform: none;
+      }
+
+      .menu-item.active {
+        background: var(--primary);
+        color: #030806;
+        box-shadow: 0 2px 10px var(--primary-glow);
+      }
+
       .sub-menu-pills {
-        margin-top: 1rem;
+        display: none; /* Pushed into welcome or bottom drawer for clean viewport */
       }
+
+      /* Compact, perfectly fitted viewport stage */
       .content-stage {
+        width: 100%;
         max-width: 100%;
-        min-height: 560px;
+        flex: 1;
+        min-height: 0; /* Lets flexbox size accurately */
+        height: 100%;
+        position: relative;
+        overflow: hidden;
       }
+
       .stage-card {
-        padding: 1.6rem 1.25rem;
-        border-radius: 1.4rem;
-        max-height: 560px;
+        padding: 1.25rem 1.15rem;
+        border-radius: 1.3rem;
+        max-height: 100%;
+        height: 100%;
+        gap: 0.85rem;
       }
+
       #view-welcome {
-        margin-top: 12px;
-        padding-top: 1.8rem;
+        margin-top: 0;
+        padding-top: 1.25rem;
       }
+
+      .welcome-logo-banner {
+        padding: 0.2rem 0;
+      }
+
+      .welcome-logo-svg {
+        width: 100px;
+      }
+
       .stage-title {
-        font-size: 1.5rem;
+        font-size: 1.35rem;
       }
+
+      .stage-desc {
+        font-size: 0.82rem;
+        line-height: 1.5;
+      }
+
+      .toggle-bar {
+        padding: 0.25rem;
+      }
+
+      .toggle-btn {
+        font-size: 0.68rem;
+        padding: 0.35rem 0.75rem;
+      }
+
+      .pixel-scroll-stack {
+        padding: 0.4rem 0 3.5rem; /* Room for rubber duck */
+        gap: 0.65rem;
+      }
+
+      .release-card {
+        padding: 0.85rem 1rem;
+        border-radius: 0.95rem;
+      }
+
+      .release-icon {
+        width: 36px;
+        height: 36px;
+        font-size: 1.2rem;
+      }
+
+      .release-name {
+        font-size: 0.9rem;
+      }
+
+      .release-category {
+        font-size: 0.65rem;
+      }
+
+      .btn-launch {
+        font-size: 0.72rem;
+        padding: 0.45rem 0.95rem;
+      }
+
       .duck-toy {
-        bottom: 1.2rem;
-        right: 1.2rem;
-        transform: scale(0.85);
+        bottom: 0.85rem;
+        right: 0.85rem;
+        transform: scale(0.72);
+        transform-origin: bottom right;
       }
     }
   </style>
@@ -661,8 +814,10 @@
 
   <canvas id="ambient-canvas"></canvas>
 
-  <div class="oval-glow-container">
+  <div class="bg-parallax-container">
     <div class="glowing-oval" id="glow-oval"></div>
+    <div class="parallax-square square-1" id="square-1"></div>
+    <div class="parallax-square square-2" id="square-2"></div>
   </div>
 
   <header class="top-header">
@@ -694,10 +849,10 @@
     
     <nav class="menu-column" id="nav-column">
       <div class="nav-pill-indicator" id="nav-indicator"></div>
-      <button class="menu-item active" data-index="0" data-tab="welcome">1. Welcome</button>
-      <button class="menu-item" data-index="1" data-tab="apps">2. Apps</button>
-      <button class="menu-item" data-index="2" data-tab="games">3. Games</button>
-      <button class="menu-item" data-index="3" data-tab="webapps">4. Web Apps</button>
+      <button class="menu-item active" data-index="0" data-tab="welcome">Welcome</button>
+      <button class="menu-item" data-index="1" data-tab="apps">Apps</button>
+      <button class="menu-item" data-index="2" data-tab="games">Games</button>
+      <button class="menu-item" data-index="3" data-tab="webapps">Web Apps</button>
 
       <div class="sub-menu-pills">
         <a href="https://jeetexe.itch.io/" target="_blank" rel="noopener" class="sub-pill">itch.io</a>
@@ -734,12 +889,12 @@
         <div class="stage-desc">
           Welcome to Caviar Studios. Built as a solo-developer powerhouse driven by curiosity and an uncompromising commitment to crafting high-quality digital experiences.
         </div>
-        <div class="stage-desc" style="background: var(--surface-sub); border: 1px solid var(--border); padding: 1.2rem; border-radius: 1rem;">
+        <div class="stage-desc" style="background: var(--surface-sub); border: 1px solid var(--border-glass); padding: 0.95rem; border-radius: 0.85rem;">
           <strong style="color: var(--text);">Core Specialization:</strong><br>
-          I specialize exclusively in <strong>Windows and Android software architecture</strong> — engineering native desktop binaries and lean mobile utilities with zero fluff.
+          I specialize in <strong>Windows and Android software architecture</strong> — engineering lean utilities with zero fluff.
         </div>
         <div class="stage-desc">
-          <strong>Mission:</strong> Premium software and engaging games should be free and accessible to everyone without locked paywalls or corporate subscription traps.
+          <strong>Mission:</strong> Free, open software with zero paywalls or corporate subscriptions.
         </div>
       </div>
 
@@ -911,7 +1066,7 @@
   </div>
 
   <script>
-    // 1. Pointer & Trail Engine
+    // 1. Pointer & Ambient Particles
     const canvas = document.getElementById('ambient-canvas');
     const ctx = canvas.getContext('2d');
     let width = canvas.width = window.innerWidth;
@@ -924,14 +1079,14 @@
       height = canvas.height = window.innerHeight;
     });
 
-    const particleCount = isMobile ? 0 : 36;
+    const particleCount = isMobile ? 0 : 38;
     const particles = [];
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.7,
-        vy: (Math.random() - 0.5) * 0.7,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
         size: Math.random() * 2 + 1.2,
         alpha: Math.random() * 0.35 + 0.15
       });
@@ -948,7 +1103,6 @@
       if (trail.length > maxTrail) trail.shift();
     }
 
-    // Enable cursor trail ONLY on non-mobile devices (disabled for touch)
     if (!isMobile) {
       window.addEventListener('mousemove', (e) => pushPointer(e.clientX, e.clientY));
     }
@@ -1022,17 +1176,23 @@
     }
     renderLoop();
 
-    // 2. Parallax Shift on Glowing Oval (Desktop only)
+    // 2. Parallax Backdrop
     const glowOval = document.getElementById('glow-oval');
+    const square1 = document.getElementById('square-1');
+    const square2 = document.getElementById('square-2');
+
     if (!isMobile) {
       window.addEventListener('mousemove', (e) => {
         const nx = (e.clientX / window.innerWidth - 0.5);
         const ny = (e.clientY / window.innerHeight - 0.5);
+
         if (glowOval) glowOval.style.transform = `translate3d(${nx * -30}px, ${ny * -30}px, 0) rotate(-18deg)`;
+        if (square1) square1.style.transform = `translate3d(${nx * 40}px, ${ny * 35}px, 0) rotate(24deg)`;
+        if (square2) square2.style.transform = `translate3d(${nx * -50}px, ${ny * -45}px, 0) rotate(-16deg)`;
       });
     }
 
-    // 3. Audio Synthesizer Cues
+    // 3. Audio Engine
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function unlockAudio() {
       if (audioCtx.state === 'suspended') {
@@ -1096,13 +1256,13 @@
     let currentIndex = 0;
 
     function updatePillPos(targetButton) {
-      if (!targetButton || !navIndicator) return;
+      if (!targetButton || !navIndicator || isMobile) return;
       const targetTop = targetButton.offsetTop + (targetButton.offsetHeight / 2) - 3;
       navIndicator.style.transform = `translateY(${targetTop}px)`;
     }
 
     const activeInitial = document.querySelector('.menu-item.active');
-    if (activeInitial) updatePillPos(activeInitial);
+    if (activeInitial && !isMobile) updatePillPos(activeInitial);
 
     menuButtons.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1112,7 +1272,7 @@
         const movingDownwards = newIndex > currentIndex;
         menuButtons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        updatePillPos(btn);
+        if (!isMobile) updatePillPos(btn);
 
         const currentCard = document.querySelector('.stage-card.card-active');
         const targetTab = btn.getAttribute('data-tab');
@@ -1224,7 +1384,7 @@
       });
     }
 
-    // 7. Zero-Delay Emerald Rubber Duck (Persistent Storage)
+    // 7. Rubber Duck (Persistent Storage)
     let squeaks = parseInt(localStorage.getItem('caviar_global_squeaks') || '0', 10);
     const duckToy = document.getElementById('duck-toy');
     const duckSprite = document.getElementById('duck-sprite');
